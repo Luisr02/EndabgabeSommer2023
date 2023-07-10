@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Eisdealer</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="eis.js"></script>
+</head>
+
+<body>
+    
+    <h1>Eis zusammenstellen</h1>
+   
+    <div id="gamecontainer">
+
+        <div id="creationdiv">
+
+            <h2>Zutaten</h2>
+
+            <div>
+                <h3>Eissorte</h3>
+                <fieldset>
+                <input type="radio" id="flavouroptions">
+                </fieldset>
+            </div>
+
+            <div id="sauceoptions">
+                <h3>Sauce</h3>
+            </div>
+
+            <div id="toppingoptions">
+                <h3>Toppings</h3>
+            </div>
+
+            <div id="numberofscoops">
+                <h3>Toppings</h3>
+            </div>
+
+        </div>
+
+        <div id="canvasdiv">
+
+            <h2>Your Ice Cream</h2>
+
+            <canvas id="icecanvas" width="400" height="500"></canvas>
+
+            <div id="price-and-save">
+
+                <h2>Preis: <span id="pricespan">0.00</span>€</h2>
+
+                <button id="savebutton">Eis speichern</button>
+                <button id="loadbutton">Eis laden</button>
+                <button id="resetbutton">Eis zurücksetzen</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>
