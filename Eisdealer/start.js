@@ -6,10 +6,10 @@ var start;
         let resetGameButton = document.querySelector("#resetgame");
         resetGameButton.addEventListener("click", resetSortiment);
     }
-    function resetSortiment() {
+    async function resetSortiment() {
         console.log("test");
-        fetch(`https://webuser.hs-furtwangen.de/~rieslelu/Database/?command=drop&collection=Icecream`);
-        fetch(`https://webuser.hs-furtwangen.de/~rieslelu/Database/?command=create&collection=Icecream`);
+        await fetch(`https://webuser.hs-furtwangen.de/~rieslelu/Database/?command=drop&collection=Icecream`);
+        await fetch(`https://webuser.hs-furtwangen.de/~rieslelu/Database/?command=create&collection=Icecream`);
     }
 })(start || (start = {}));
 //# sourceMappingURL=start.js.map

@@ -7,10 +7,12 @@ namespace eisdealer {
         let saveButton = document.querySelector("#savebutton");
         let loadButton = document.querySelector("#loadbutton");
         let resetButton = document.querySelector("#resetbutton");
+        let resetSortimentButton = document.querySelector("#resetsortimentbutton");
 
         saveButton!.addEventListener("click", saveIceCream);
         loadButton!.addEventListener("click", loadIceCream);
         resetButton!.addEventListener("click", resetIceCream);
+        resetSortimentButton!.addEventListener("click", resetSortiment);
         
         generateInputElements(flavourOptions, "flavouroptions", "radio");
         generateInputElements(sauceOptions, "sauceoptions", "checkbox");
@@ -23,6 +25,7 @@ namespace eisdealer {
     let cvs: HTMLCanvasElement;
     let crc2: CanvasRenderingContext2D;
     let data: IceCream[] = [];
+    let currentId = 1;
 
     function generateInputElements(_options: IceCreamElement[], _containerId: string, _inputType: "checkbox" | "radio"): void {
     let container = document.getElementById(_containerId);
@@ -32,7 +35,8 @@ namespace eisdealer {
 
         let input = document.createElement("input");
         input.type = _inputType;
-        input.name = option.type;
+        input.name = option.type;        
+
         input.value = index.toString();
         input.addEventListener("change", (event) => {
             const target = event.target as HTMLInputElement;
@@ -46,6 +50,7 @@ namespace eisdealer {
         label.insertBefore(input, label.firstChild);
         container!.appendChild(label);
     });
+
     }
 
     function removeElementFromIceCream(_element: IceCreamElement) {
@@ -184,13 +189,24 @@ namespace eisdealer {
     function saveIceCream(): void {
         console.log("save");
 
-        let modifiedIceCream: any = { ...currentIceCream };
+        if (currentId < 5) {
 
-        modifiedIceCream.sauces = Object.assign({}, currentIceCream.sauces);
-        modifiedIceCream.toppings = Object.assign({}, currentIceCream.toppings);
+            let modifiedIceCream: any = { ...currentIceCream };
 
-        console.log(JSON.stringify(modifiedIceCream))
-        fetch (`https://webuser.hs-furtwangen.de/~rieslelu/Database/?command=insert&collection=Icecream&data=${JSON.stringify(modifiedIceCream)}`);
+            modifiedIceCream.sauces = Object.assign({}, currentIceCream.sauces);
+            modifiedIceCream.toppings = Object.assign({}, currentIceCream.toppings);
+
+            let orderedIceCream = {
+                iceId: currentId,
+                ...modifiedIceCream
+            };
+        
+            console.log(JSON.stringify(orderedIceCream))
+            fetch (`https://webuser.hs-furtwangen.de/~rieslelu/Database/?command=insert&collection=Icecream&data=${JSON.stringify(orderedIceCream)}`);
+            currentId++;
+        } else {
+            alert("Du kannst nur 4 Eissorten im Sortiment haben.");
+        }
     }
 
     async function loadIceCream(): Promise<void> {
@@ -211,6 +227,7 @@ namespace eisdealer {
             currentIceCream = data[0];
             console.log(currentIceCream);
         }
+        //generateInputElements(flavourOptions, "flavouroptions", "radio");
         updateInputElements();
         displayIceCream();
         updatePrice();
@@ -218,19 +235,29 @@ namespace eisdealer {
     
     function updateInputElements(): void {
         console.log("update")
+     
         flavourOptions.forEach((flavour, index) => {
+            console.log(flavour);
             let radio = document.querySelector(`input[name="flavour"][value="${index}"]`) as HTMLInputElement;
-            radio.checked = flavour === currentIceCream.flavours;
+            if(currentIceCream.flavours?.id == radio.value)
+                radio.checked = true;
+            //radio.checked = flavour === currentIceCream.flavours;
         });
-    
+
         sauceOptions.forEach((sauce, index) => {
+            console.log(sauce);
             let checkbox = document.querySelector(`input[name="sauce"][value="${index}"]`) as HTMLInputElement;
-            checkbox.checked = currentIceCream.sauces.includes(sauce);
+            if(currentIceCream.sauces[0].id == checkbox.value)
+                checkbox.checked = true;
+            //checkbox.checked = currentIceCream.sauces.includes(sauce);
         });
     
         toppingOptions.forEach((topping, index) => {
+            console.log(topping);
             let checkbox = document.querySelector(`input[name="topping"][value="${index}"]`) as HTMLInputElement;
-            checkbox.checked = currentIceCream.toppings.includes(topping);
+            if(currentIceCream.sauces[0].id == checkbox.value)
+                checkbox.checked = true;
+            //checkbox.checked = currentIceCream.toppings.includes(topping);
         });
     
         let select = document.querySelector(".numberofscoopsoptions") as HTMLSelectElement;
@@ -272,4 +299,13 @@ namespace eisdealer {
 
         updatePrice();
     }
+
+    async function resetSortiment(): Promise<void> {
+        console.log("Sortiment zurückgesetzt");
+        
+        await fetch (`https://webuser.hs-furtwangen.de/~rieslelu/Database/?command=drop&collection=Icecream`);
+
+        await fetch (`https://webuser.hs-furtwangen.de/~rieslelu/Database/?command=create&collection=Icecream`);
+    }
+
 }

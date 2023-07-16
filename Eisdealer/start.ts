@@ -7,12 +7,12 @@ namespace start {
         resetGameButton!.addEventListener("click", resetSortiment);
     }
 
-    function resetSortiment(): void {
+    async function resetSortiment(): Promise<void> {
         console.log("test");
         
-        fetch (`https://webuser.hs-furtwangen.de/~rieslelu/Database/?command=drop&collection=Icecream`);
+        await fetch (`https://webuser.hs-furtwangen.de/~rieslelu/Database/?command=drop&collection=Icecream`);
 
-        fetch (`https://webuser.hs-furtwangen.de/~rieslelu/Database/?command=create&collection=Icecream`);
+        await fetch (`https://webuser.hs-furtwangen.de/~rieslelu/Database/?command=create&collection=Icecream`);
     }
 
 }
