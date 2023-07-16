@@ -3,14 +3,18 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eisdealer</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="eis.js"></script>
+    <link rel="stylesheet" href="creation.css">
+    <script src="data.js"></script>
+    <script src="creation.js"></script>
 </head>
 
 <body>
     
     <h1>Eis zusammenstellen</h1>
+    
+    <button onclick="window.location.href='../start.html'" id="mainmenu">Zum Hauptmenü</button>
    
     <div id="gamecontainer">
 
@@ -18,11 +22,8 @@
 
             <h2>Zutaten</h2>
 
-            <div>
+            <div id="flavouroptions">
                 <h3>Eissorte</h3>
-                <fieldset>
-                <input type="radio" id="flavouroptions">
-                </fieldset>
             </div>
 
             <div id="sauceoptions">
@@ -34,7 +35,7 @@
             </div>
 
             <div id="numberofscoops">
-                <h3>Toppings</h3>
+                <h3>Anzahl Kugeln</h3>
             </div>
 
         </div>
@@ -45,15 +46,11 @@
 
             <canvas id="icecanvas" width="400" height="500"></canvas>
 
-            <div id="price-and-save">
+            <h2>Preis: <span id="pricespan">0.00</span>€</h2>
 
-                <h2>Preis: <span id="pricespan">0.00</span>€</h2>
-
-                <button id="savebutton">Eis speichern</button>
-                <button id="loadbutton">Eis laden</button>
-                <button id="resetbutton">Eis zurücksetzen</button>
-
-            </div>
+            <button id="savebutton">Eis speichern</button>
+            <button id="loadbutton">Eis laden</button>
+            <button id="resetbutton">Eis zurücksetzen</button>
 
         </div>
 
