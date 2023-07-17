@@ -9,6 +9,7 @@ namespace eisdealer {
     }
     
     export interface IceCream {
+        iceId: number;
         flavours: IceCreamElement | null;
         sauces: IceCreamElement[];
         toppings: IceCreamElement[];

@@ -3,7 +3,7 @@ namespace eisdealer {
     let cvs: HTMLCanvasElement;
     let crc2: CanvasRenderingContext2D;
     let data: IceCream[] = [];
-    let customers: Customer[] = [];
+    export let customers: Customer[] = [];
     export let chairs: {position: Vector, occupied: boolean}[] = [];
 
     window.addEventListener("load", handleLoad);
@@ -12,29 +12,24 @@ namespace eisdealer {
         cvs = document.querySelector("#gameCanvas")!;
         crc2 = cvs.getContext("2d")!;
         loadIceCream();
-        createParlorEnvironment();
         updateGame();
 
-        for(let i = 0; i < 4; i++) {
-            let customer = new Customer(580, 100 + i * 100);
-            let targetChair = chairs.find(chair => !chair.occupied);
-            if (targetChair) {
-                customer.setTarget(targetChair.position);
-                targetChair.occupied = true;
-            }
-            customers.push(customer);
-            customer.findSeat();
-            customer.draw(crc2);
-        }
-
+        setInterval(createCustomer, 3000);
     }
 
+    function createCustomer() {
+        let customer = new Customer(0, 250);
+        customer.setTarget(new Vector(400, 400));
+        customers.push(customer);
+    }
+    
     async function loadIceCream(): Promise<void> {
         console.log("load");
         const response = await fetch("https://webuser.hs-furtwangen.de/~rieslelu/Database/?command=find&collection=Icecream");
         const dataJSON = await response.json();
         data = Object.values(dataJSON.data).map((iceCream: any) => {
         return {
+            iceId: iceCream.iceId,
             flavours: iceCream.flavours,
             sauces: iceCream.sauces,
             toppings: iceCream.toppings,

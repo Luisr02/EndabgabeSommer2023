@@ -4,26 +4,20 @@ var eisdealer;
     let cvs;
     let crc2;
     let data = [];
-    let customers = [];
+    eisdealer.customers = [];
     eisdealer.chairs = [];
     window.addEventListener("load", handleLoad);
     function handleLoad() {
         cvs = document.querySelector("#gameCanvas");
         crc2 = cvs.getContext("2d");
         loadIceCream();
-        createParlorEnvironment();
         updateGame();
-        for (let i = 0; i < 4; i++) {
-            let customer = new eisdealer.Customer(580, 100 + i * 100);
-            let targetChair = eisdealer.chairs.find(chair => !chair.occupied);
-            if (targetChair) {
-                customer.setTarget(targetChair.position);
-                targetChair.occupied = true;
-            }
-            customers.push(customer);
-            customer.findSeat();
-            customer.draw(crc2);
-        }
+        setInterval(createCustomer, 3000);
+    }
+    function createCustomer() {
+        let customer = new eisdealer.Customer(0, 250);
+        customer.setTarget(new eisdealer.Vector(400, 400));
+        eisdealer.customers.push(customer);
     }
     async function loadIceCream() {
         console.log("load");
@@ -31,6 +25,7 @@ var eisdealer;
         const dataJSON = await response.json();
         data = Object.values(dataJSON.data).map((iceCream) => {
             return {
+                iceId: iceCream.iceId,
                 flavours: iceCream.flavours,
                 sauces: iceCream.sauces,
                 toppings: iceCream.toppings,
@@ -127,7 +122,7 @@ var eisdealer;
         crc2.clearRect(0, 0, cvs.width, cvs.height);
         createParlorEnvironment();
         // Update and draw customers
-        for (let customer of customers) {
+        for (let customer of eisdealer.customers) {
             customer.move();
             customer.emotion = 0;
             customer.draw(crc2);
