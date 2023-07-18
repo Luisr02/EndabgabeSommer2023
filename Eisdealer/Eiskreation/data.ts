@@ -14,6 +14,7 @@ namespace eisdealer {
         sauces: IceCreamElement[];
         toppings: IceCreamElement[];
         scoopnumber: number;
+        total?: number;
     }
 
     export let flavourOptions: IceCreamElement[] = [

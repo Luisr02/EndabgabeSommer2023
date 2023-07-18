@@ -25,7 +25,6 @@ namespace eisdealer {
     let cvs: HTMLCanvasElement;
     let crc2: CanvasRenderingContext2D;
     let data: IceCream[] = [];
-    //let currentId: number = 1;
 
     function generateInputElements(_options: IceCreamElement[], _containerId: string, _inputType: "checkbox" | "radio"): void {
     let container = document.getElementById(_containerId);
@@ -186,8 +185,6 @@ namespace eisdealer {
     } 
     
     async function saveIceCream (): Promise<void> {
-        console.log("save");
-
         const response = await fetch("https://webuser.hs-furtwangen.de/~rieslelu/Database/?command=find&collection=Icecream");
         const dataJSON = await response.json();
         data = Object.values(dataJSON.data).map((iceCream: any) => {
@@ -242,10 +239,13 @@ namespace eisdealer {
         if (data.length > 0) {
             currentIceCream = data[data.length - 1];
             console.log(currentIceCream)
+            updateInputElements();
+            displayIceCream();
+            updatePrice();
+        } else {
+            alert("Auf dem Server sind noch keine kreationen gespeichert")
         }
-        updateInputElements();
-        displayIceCream();
-        updatePrice();
+        
     }
     
     function updateInputElements(): void {

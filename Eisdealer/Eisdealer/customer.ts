@@ -1,80 +1,113 @@
 namespace eisdealer {
 
-export class Customer {
-    public position: Vector;
-    public velocity: Vector;
-    public emotion: number;
-    public iceCream: IceCream | null;
-    public target: Vector | null;
+    export class Customer {
+        public position: Vector;
+        public velocity: Vector;
+        public emotion: number;
+        public desiredIceCream: number | null;
+        public target: Vector | null;
+        public isInParlor: boolean;
+        
+        constructor(x: number, y: number ) {
+            this.position = new Vector (x,y);
+            this.velocity = new Vector (1,1);
+            this.emotion = 0;
+            this.desiredIceCream = Math.floor(Math.random() * 4);
+            this.isInParlor = true;
+        }
     
-    constructor(x: number, y: number ) {
-        this.position = new Vector (x,y);
-        this.velocity = new Vector (1,1);
-        this.emotion = 0;
-        this.iceCream = null;
-    }
-
-    public setTarget(target: Vector) {
-        this.target = target;
-    }
-
-    public waitAndLeave() {
-        // Wait for 2 seconds
-        setTimeout(() => {
-            // Set the target to a point outside the room to make the customer leave
-            this.setTarget(new Vector(-100, this.position.y));
-        }, 2000);
-    }
-
-    public move(): void {
-        if (this.target) {
-            let direction = this.target.subtract(this.position);
-            direction = direction.scale(1 / direction.length());
-            this.position = this.position.add(direction.scale(this.velocity.length()));
-            
-            if (this.position.subtract(this.target).length() < 1) {
-                // The customer reached the target
-                this.velocity = new Vector(0, 0); // Stop moving
+        public setTarget(target: Vector): void {
+            this.target = target;
+        }
+    
+        public waitAndLeave(): void {
+            setTimeout(() => {
+                this.setTarget(new Vector(-100, this.position.y));
+            }, 300);
+        }
+    
+        public move(): void {
+            if (this.target) {
+                let direction = this.target.subtract(this.position);
+                direction = direction.scale(1 / direction.length());
+                this.position = this.position.add(direction.scale(this.velocity.length()));
                 
-                if (this.target.x === 400 && this.target.y === 400) {
-                    // If the customer is in the middle of the room, look for an available seat
-                    let targetChair = chairs.find(chair => !chair.occupied);
-                    if (targetChair) {
-                        this.setTarget(targetChair.position);
-                        targetChair.occupied = true;
+                if (this.position.subtract(this.target).length() < 1) {
+            
+                    if (this.target.x === 500 && this.target.y === 300) {
+                        
+                        let targetChairIndex = chairs.findIndex(chair => !chair.occupied);
+                        
+                        if (targetChairIndex >= 0) {
+                            let targetChair = chairs[targetChairIndex];
+                            this.setTarget(targetChair.position);
+                            chairs[targetChairIndex].occupied = true;
+                        } else {
+                            
+                            this.waitAndLeave();
+                        }
                     } else {
-                        this.waitAndLeave();
+                        
+                        this.velocity = new Vector(0, 0);
+                        this.target = null;
                     }
-                } else if (this.position.x < 0) {
-                    // If the customer is outside the room, remove the customer from the customers array
-                    let index = customers.indexOf(this);
-                    if (index !== -1) {
-                        customers.splice(index, 1);
-                    }
-                } else {
-                    // If the customer reached a chair, remove the target
-                    this.target = null;
+                } 
+                
+                if (this.position.x < 0) {
+                    this.leaveParlor();
                 }
             }
         }
-    }
-    
 
-    public draw(context: CanvasRenderingContext2D) {
-        context.beginPath();
-        context.arc(this.position.x, this.position.y, 20, 0, Math.PI * 2);
-        switch(this.emotion) {
-            case -1:
-                context.fillStyle = 'red';
-                break;
-            case 0:
-                context.fillStyle = 'yellow';
-                break;
-            case 1:
-                context.fillStyle = 'green';
-                break;
+        public requestIceCream(context: CanvasRenderingContext2D): void {
+            if (this.desiredIceCream !== null) {
+                let speechBubble = `Icecream Number ${this.desiredIceCream + 1} please`;
+                context.font = "20px Arial";
+                context.fillText(speechBubble, this.position.x, this.position.y - 30);
+            }
         }
-        context.fill();
+          
+        public draw(context: CanvasRenderingContext2D): void {
+            context.beginPath();
+            context.arc(this.position.x, this.position.y, 20, 0, Math.PI * 2);
+            if (this === selectedCustomer) {
+                context.strokeStyle = "blue";
+                context.lineWidth = 3;
+                context.stroke();
+            }
+            switch(this.emotion) {
+                case -1:
+                    context.fillStyle = "red";
+                    break;
+                case 0:
+                    context.fillStyle = "orange";
+                    break;
+                case 1:
+                    context.fillStyle = "green";
+                    break;
+            }
+            context.fill();
+
+            context.fillStyle = "black";
+            context.beginPath();
+            context.arc(this.position.x - 10, this.position.y - 10, 2, 0, Math.PI * 2);
+            context.fill();
+            context.beginPath();
+            context.arc(this.position.x + 10, this.position.y - 10, 2, 0, Math.PI * 2);
+            context.fill();
+
+            context.beginPath();
+            context.arc(this.position.x, this.position.y, 13, 0, Math.PI);
+            context.stroke();
+
+            if (this.position.x >= 510) {
+                this.requestIceCream(context);
+            }
+            
+        }
+
+        public leaveParlor() {
+            this.isInParlor = false;
+        }
     }
-}
-}
+    }

@@ -20,7 +20,6 @@ var eisdealer;
     let cvs;
     let crc2;
     let data = [];
-    //let currentId: number = 1;
     function generateInputElements(_options, _containerId, _inputType) {
         let container = document.getElementById(_containerId);
         _options.forEach((option, index) => {
@@ -167,7 +166,6 @@ var eisdealer;
         crc2.fill();
     }
     async function saveIceCream() {
-        console.log("save");
         const response = await fetch("https://webuser.hs-furtwangen.de/~rieslelu/Database/?command=find&collection=Icecream");
         const dataJSON = await response.json();
         data = Object.values(dataJSON.data).map((iceCream) => {
@@ -216,10 +214,13 @@ var eisdealer;
         if (data.length > 0) {
             currentIceCream = data[data.length - 1];
             console.log(currentIceCream);
+            updateInputElements();
+            displayIceCream();
+            updatePrice();
         }
-        updateInputElements();
-        displayIceCream();
-        updatePrice();
+        else {
+            alert("Auf dem Server sind noch keine kreationen gespeichert");
+        }
     }
     function updateInputElements() {
         console.log("update");

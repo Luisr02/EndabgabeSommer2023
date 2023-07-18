@@ -1,3 +1,11 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+h1 {
+    display: flex;
+}
+
 #game {
     display: flex;
     flex-direction: column;
@@ -35,4 +43,16 @@
     border: 1px solid #000;
     width: 200px;
     height: 250px;
+}
+
+button {
+    display: block;
+    margin: 10px 0;
+    padding: 5px 10px;
+}
+
+#mainmenu {
+    position:absolute;
+    top:20px;
+    right:20px;
 }
