@@ -124,7 +124,7 @@ var eisdealer;
             crc2.fill();
             y -= (scoopRadius * 2) + gapBetweenScoops;
         }
-        // Draw the sauces
+        // Saucen
         if (currentIceCream.sauces.length > 0) {
             let sauceThickness = 10;
             currentIceCream.sauces.forEach(sauce => {
