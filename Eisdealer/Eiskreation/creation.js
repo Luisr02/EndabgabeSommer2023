@@ -43,12 +43,12 @@ var eisdealer;
         });
     }
     function removeElementFromIceCream(_element) {
-        if (_element.type === 'sauce') {
+        if (_element.type === "sauce") {
             const index = currentIceCream.sauces.findIndex(sauce => sauce.name === _element.name);
             if (index > -1)
                 currentIceCream.sauces.splice(index, 1);
         }
-        else if (_element.type === 'topping') {
+        else if (_element.type === "topping") {
             const index = currentIceCream.toppings.findIndex(topping => topping.name === _element.name);
             if (index > -1)
                 currentIceCream.toppings.splice(index, 1);
